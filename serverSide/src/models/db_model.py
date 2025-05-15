@@ -1,5 +1,5 @@
 # SQL-ALchemy [ORM]
-from main import db
+from src.server import db
 import datetime
 
 class cards(db.Model):

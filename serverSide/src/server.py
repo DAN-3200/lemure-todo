@@ -7,24 +7,20 @@ from flask_restx import Api
 # flask_migrate - versionamento do banco
 # Talvez eu aplique PANDAS aqui
 
-# - Definições do App
+# -- Definições do App
 app = Flask(__name__)
-CORS(app, supports_credentials=True) # Isto permiti a solicitação entre apps de domínios diferentes 
+CORS(app, supports_credentials=True)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' # Conexão com banco SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.app_context().push() # !analisar
-
 app.config['SECRET_KEY'] = 'ab44d789595b66efeda6b633e686a9db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# - RestX
 api = Api(app, title='Py Smart-API', description='Um simples API em flask')
-
-# - DataBase
 db = SQLAlchemy(app)
 
 # - Import Routes
-from routes import (
+from controlls import (
     toDo, # C.R.U.D toDo por intermédio de requisições HTTP
 )
  

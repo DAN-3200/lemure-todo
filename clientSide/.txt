@@ -1,0 +1,7 @@
+flat
+no shadow
+rounded-lg 8px
+1° front
+2° back
+
+white + purple
