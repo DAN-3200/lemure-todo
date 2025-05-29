@@ -1,6 +1,13 @@
 import { atom } from 'jotai';
+import { iToDo } from '../types/useTypes';
 
 export const ctxMain = {
-	toDos: atom(),
+	BagToDos: atom<iToDo[]>([{	
+		id: 2,
+		content: "S",
+		favorited: true,
+		title: "S",
+		validity: ""
+	} as iToDo]),
 	optionBar: atom('todos'),
 };

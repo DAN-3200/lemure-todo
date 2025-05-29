@@ -1,8 +1,9 @@
 {
-  "name": "app.todo",
-  "private": true,
-  "version": "0.0.0",
+  "name": "app-todo",
   "type": "module",
+  "private": true,
+  "version": "2.0.0",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

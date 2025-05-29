@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import clsx from 'clsx';
 import { ctxMain } from '../../contexts/ctxMain';
+import { iToDo } from '../../types/useTypes';
 
 export function NotesView() {
-	const [, setDB] = useAtom(ctxMain.toDos);
+	const [DB, setDB] = useAtom(ctxMain.BagToDos);
 	const [option, setOption] = useAtom(ctxMain.optionBar);
 
 	// Requisição de todos os dados
 	useEffect(() => {
-		//
+		// --
 		(async () => {
 			let resp;
 			try {
@@ -20,112 +20,48 @@ export function NotesView() {
 			}
 			setDB((prev) => [...prev, ...resp]);
 		})();
-		//
+		// --
 	}, []);
 
-	const filterMap = () => {};
+	const filterRules = {
+		todos: () => true,
+		check: (item: iToDo) => item.favorited == true,
+		pending: (item: iToDo) => item.favorited == false,
+	};
 
-	return <div className='w-134 h-full overflow-auto'></div>;
+	const filteredItems = DB.filter((item) =>
+		filterRules[option] ? filterRules[option]?.(item) : true
+	);
+
+	return (
+		<div className='w-134 h-full overflow-auto flex flex-col items-center gap-2'>
+			{filteredItems.map((item) => (
+				<Note
+					key={`H${item.id}`}
+					item={item}
+				/>
+			))}
+		</div>
+	);
 }
 
-interface Item {
-	title: string;
-	content: string;
-	validity: string;
-	favorited: boolean;
+function Note({ item }: { item: iToDo }) {
+	return (
+		<div className='bg-white w-full rounded-lg shrink-0 min-h-30 h-max flex flex-col overflow-x-hidden gap-1 py-1 transition-all'>
+			<div className='h-12 shrink-0 grid place-items-center px-2 border-b-2 border-black/30'>
+				<input
+					type='text'
+					placeholder='title...'
+					className='w-full self-center-safe px-2 p border-transparent transition outline-none border-2 hover:border-stone-600 rounded focus:border-purple-500 text-lg'
+				/>
+			</div>
+			<div className='h-full flex items-start px-2'>
+				<textarea
+					placeholder='typing'
+					spellCheck='false'
+					className='resize-none text-base px-2 focus:h-20 transition-all w-full border-transparent outline-none border-2 hover:border-stone-600 duration-300 rounded focus:border-purple-500 not-focus:line-clamp-1 not-focus:h-[2lh] '></textarea>
+			</div>
+			<div className='h-12 shrink-0'></div>
+		</div>
+	);
 }
-
-// function Note({ item }: { item: Item }) {
-// 	const [DB, setDB] = useAtom(ctxMain.toDos);
-// 	const [title, setTitle] = useState(item.title);
-// 	const [content, setContent] = useState(item.content);
-// 	const [validity, setValidity] = useState(item.validity);
-// 	const [favo, setFavo] = useState(item.favorited);
-
-// 	const Delete = (id) => {
-// 		const newDB = DB.filter((item) => item.id !== id);
-// 		setDB(newDB);
-// 		Exchange(id, `http://127.0.0.1:5000/toDo/cards/${id}`, 'DELETE');
-// 	};
-
-// 	const Update = (id) => {
-// 		// Atualizar Local DB
-// 		const item = DB.map((task) => {
-// 			if (task.id === id) {
-// 				return {
-// 					...task,
-// 					title: title,
-// 					content: content,
-// 					favorited: favo,
-// 					validity: validity,
-// 				};
-// 			} else {
-// 				return task;
-// 			}
-// 		});
-// 		setDB(item);
-
-// 		// Atualizar Server DB
-// 		Exchange(
-// 			{ title: title, content: content, favorited: favo, validity: validity },
-// 			`http://127.0.0.1:5000/toDo/cards/${id}`,
-// 			'PUT'
-// 		);
-// 	};
-
-// 	useEffect(() => {
-// 		Update(props.item.id);
-// 	}, [title, content, favo]);
-
-// 	return (
-// 		<div className='note'>
-// 			<div className='formNote'>
-// 				<input
-// 					type='text'
-// 					placeholder='Title...'
-// 					value={title}
-// 					onChange={(e) => {
-// 						setTitle(e.target.value);
-// 					}}
-// 					spellCheck='false'
-// 					maxLength={64}
-// 				/>
-// 				<textarea
-// 					placeholder='Content'
-// 					value={content}
-// 					onChange={(e) => {
-// 						setContent(e.target.value);
-// 					}}
-// 					spellCheck='false'
-// 				/>
-// 				<div className='toolsNote'>
-// 					<button
-// 						className='deleteNote'
-// 						onClick={() => Delete(props.item.id)}>
-// 						<RiDeleteBin2Line />
-// 					</button>
-// 					<input
-// 						type='date'
-// 						className='validade'
-// 						value={validity}
-// 						onChange={(e) => setValidity(e.target.value)}
-// 						onBlur={(e) => {
-// 							if (moment(e.target.value, 'YYYY-MM-DD').isValid()) {
-// 								Update(props.item.id);
-// 							}
-// 						}}
-// 						min={props.item.date}
-// 					/>
-// 					<button
-// 						className='saveNote'
-// 						onClick={() => setFavo(!favo)}>
-// 						<FaCheckSquare style={{ color: favo ? '#4eff98' : '' }} />
-// 					</button>
-// 					<span className='trueDate'>
-// 						{moment(props.item.date).format('DD MMM YYYY')}
-// 					</span>
-// 				</div>
-// 			</div>
-// 		</div>
-// 	);
-// }

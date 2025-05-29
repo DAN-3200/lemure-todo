@@ -1,9 +1,8 @@
-# SQL-ALchemy [ORM]
-from src.server import db
+from db.connect_sql import db
 import datetime
 
-class cards(db.Model):
-    __tablename__ = 'cards'
+class newToDo(db.Model):
+    __tablename__ = 'ToDo'
 
     id = db.Column(db.Integer, primary_key=True, nullable=True)
     title = db.Column(db.String(50), nullable=True)
@@ -21,3 +20,5 @@ class cards(db.Model):
     
     def __str__(self):
         return f"Card{self.id}"
+    
+    # *validação de campos

@@ -1,47 +1,48 @@
-from src.server import ( 
-   db, 
-)
 import datetime
-from src.models.db_model import (cards)
+from src.models.db_model import (newToDo)
 
-def created(array):
-   newCard = cards(array['title'], array['content'], array['favorited'])
-   print("S", array['favorited'])
-   db.session.add(newCard)
-   db.session.commit()
+class ToDoUseCase():
+   def __init__(self,db):
+      self.db = db
 
-   return {
-      'id': newCard.id,
-      'title' : newCard.title,
-      'content': newCard.content,
-      'date': newCard.date.strftime('%Y-%m-%d'),
-      'favorited': newCard.favorited,
-      'validity': newCard.date.strftime("%Y-%m-%d"),
-   }
+   def created(self,array):
+      newCard = newToDo(array['title'], array['content'], array['favorited'])
+      print("S", array['favorited'])
+      self.db.session.add(newCard)
+      self.db.session.commit()
 
-def readed():
-   # compreensão de lista -> [expressão for item in lista]
-   return [{
-      'id': card.id,
-      'title': card.title,
-      'content': card.content,
-      'date': card.date.strftime("%Y-%m-%d"),
-      'favorited': card.favorited,
-      'validity': card.validity.strftime("%Y-%m-%d"),
-   } for card in cards.query.all()]
+      return {
+         'id': newCard.id,
+         'title' : newCard.title,
+         'content': newCard.content,
+         'date': newCard.date.strftime('%Y-%m-%d'),
+         'favorited': newCard.favorited,
+         'validity': newCard.date.strftime("%Y-%m-%d"),
+      }
 
-def updated(id, array):
-   print("input: ", array['validity'])
-   setCard = cards.query.get(id)
-   setCard.title = array['title']
-   setCard.content = array['content']
-   setCard.favorited = array['favorited']
-   setCard.validity = datetime.datetime.strptime(array['validity'], '%Y-%m-%d')
+   def readed():
+      # compreensão de lista -> [expressão for item in lista]
+      return [{
+         'id': card.id,
+         'title': card.title,
+         'content': card.content,
+         'date': card.date.strftime("%Y-%m-%d"),
+         'favorited': card.favorited,
+         'validity': card.validity.strftime("%Y-%m-%d"),
+      } for card in newToDo.query.all()]
 
-   db.session.commit()
+   def updated(self, id, array):
+      print("input: ", array['validity'])
+      setCard = newToDo.query.get(id)
+      setCard.title = array['title']
+      setCard.content = array['content']
+      setCard.favorited = array['favorited']
+      setCard.validity = datetime.datetime.strptime(array['validity'], '%Y-%m-%d')
 
-def deleted(id):
-   trash = cards.query.get(id)
+      self.db.session.commit()
 
-   db.session.delete(trash)
-   db.session.commit()
+   def deleted(self,id):
+      trash = newToDo.query.get(id)
+
+      self.db.session.delete(trash)
+      self.db.session.commit()

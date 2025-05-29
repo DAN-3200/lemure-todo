@@ -23,3 +23,9 @@
 		transform: translateX(0);
 	}
 }
+
+@utility clickBTN {
+	&{
+		@apply active:translate-y-0.5 ;
+	}
+}
